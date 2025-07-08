@@ -81,7 +81,101 @@
 </div>
 
 <script>
-const scenes = {...};  // 此處省略內容以節省空間，實際為完整 JS 遊戲邏輯
+const scenes = {
+  intro: {
+    text: '👩‍💼 女孩：「你應該懂吧，我們可以來點草，會更 chill～😌」',
+    options: [
+      { text: '妳說的是大麻嗎？', next: 'inquiry' },
+      { text: '我不太懂…可以帶別的嗎？', next: 'doubt' },
+      { text: '當然，我處理一下！', next: 'search' }
+    ]
+  },
+  inquiry: {
+    text: '👩‍💼 女孩：「當然~你那邊搞得到嗎？」',
+    options: [
+      { text: '我查查看好了，應該不難吧？', next: 'search' },
+      { text: '我記得台灣大麻是違法的耶…', next: 'lawLink' },
+      { text: '不好意思，我沒辦法幫妳。', next: 'stop' }
+    ]
+  },
+  doubt: {
+    text: '👩‍💼 女孩：「你也太無趣了吧～我以為你比較 open mind😐」',
+    options: [
+      { text: '如果是為了你，我可以試試看…', next: 'search' },
+      { text: '好啦，不打擾你了，掰～', next: 'stop' }
+    ]
+  },
+  search: {
+    text: '🔍 你開始搜尋「台灣 大麻 哪裡買」。',
+    options: [
+      { text: '點開 【批批踢】 話題', next: 'forum' },
+      { text: '點進【大麻律師】網站', action: () => window.open('https://bettercallzoe.com/blog/rehab-under-observation-rehabilitation-treatment/', '_blank') },
+      { text: '問曾經留學過的麻麻', next: 'friend' }
+    ]
+  },
+  forum: {
+    text: '📱 很多人說可以買種子來種、或用 小飛飛社群 找人代購。',
+    options: [
+      { text: '那我買種子來自己種應該沒事吧？', next: 'seed' },
+      { text: '找代購寄來好了', next: 'package' },
+      { text: '我還是去問麻麻的意見好了', next: 'friend' }
+    ]
+  },
+  lawLink: {
+    text: '⚖️ 你點開了一篇律師網站的文章：<a href="https://bettercallzoe.com/blog/rehab-under-observation-rehabilitation-treatment/" target="_blank">戒癮治療制度：觀察勒戒、強制治療</a>。',
+    options: [
+      { text: '愛情誠可貴，自由價更高', next: 'stop' },
+      { text: '但我聽說很多人都沒被抓耶', next: 'package' }
+    ]
+  },
+  friend: {
+    text: '🧑‍🦱 麻麻說最近查很嚴，小心會被抓。',
+    options: [
+      { text: '為了愛情，還是賭一把', next: 'package' },
+      { text: '我還是不要賭人生', next: 'stop' }
+    ]
+  },
+  seed: {
+    text: '🚨 你買了種子種植，幾天後警察上門，你被依毒品危害防制條例送辦。',
+    options: [
+      { text: '🔁 遊戲可以重新開始，人生沒有', next: 'intro' }
+    ]
+  },
+  package: {
+    text: '🚔 你收到快遞，打開門是警察。你被抓了。',
+    options: [
+      { text: '🔁 要是能重新開始，我要選自由', next: 'intro' }
+    ]
+  },
+  stop: {
+    text: '✅ 你選擇不冒險，雖然失戀，但保住人生清白。',
+    options: [
+      { text: '🔁 重新開始', next: 'intro' }
+    ]
+  }
+};
+
+function showScene(key) {
+  const scene = scenes[key];
+  document.getElementById('text').innerHTML = scene.text;
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+  scene.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt.text;
+    btn.className = 'option';
+    btn.onclick = () => {
+      if (opt.next) {
+        showScene(opt.next);
+      } else if (opt.action) {
+        opt.action();
+      }
+    };
+    optionsDiv.appendChild(btn);
+  });
+}
+
+showScene('intro');
 </script>
 </body>
 </html>
